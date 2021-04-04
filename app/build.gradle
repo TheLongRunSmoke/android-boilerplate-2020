@@ -1,0 +1,164 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+/*
+ * Copyright (C) 2020 Alexander Varakosov aka TheLongRunSmoke
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Load singing data from properties.
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(rootProject.file(keystoreFile)))
+
+android {
+    compileSdkVersion app.compileSdk
+    buildToolsVersion app.buildToolsVersion
+
+    defaultConfig {
+        applicationId app.id
+        minSdkVersion app.minSdk
+        targetSdkVersion app.targetSdk
+        versionCode app.buildNumber
+        versionName "$app.versionName.$app.buildNumber"
+
+        // Enable bindings.
+        buildFeatures{
+            dataBinding true
+            viewBinding true
+        }
+
+        // Specified location to store database scheme.
+        // I make it here, to take advantage of migration tests.
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+                arg("room.incremental", true)
+            }
+        }
+
+        // Set test runner and data clearing before test.
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+
+    compileOptions {
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    // Signing credential. Store in keystore.properties.
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['someKeyAlias']
+            keyPassword keystoreProperties['someKeyPassword']
+        }
+    }
+
+    // Define build types.
+    buildTypes {
+        // Let's mark debug version with suffix, to prevent running release version with broken data.
+        debug {
+            applicationIdSuffix '.debug'
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    implementation project(":boilerplate2020")
+    // Main dependencies. Remove unnecessary for your application. See dependencies.gradle for details.
+    implementation libraries.androidCore
+    implementation libraries.kotlinCore
+    implementation libraries.coroutines
+    implementation libraries.preference
+    implementation libraries.lifecycle
+    implementation libraries.inAppNavigation
+    implementation libraries.room
+    kapt libraries.roomCompiller
+    implementation libraries.work
+    implementation libraries.daggerSupport
+    kapt libraries.daggerKapt
+    implementation libraries.rx2
+    implementation libraries.rx3
+    implementation libraries.retrofit
+    implementation libraries.glide
+    kapt libraries.glideKapt
+
+    // Debug dependencies.
+    debugImplementation libraries.androidCoreDebug
+
+    // Unit test dependencies.
+    testImplementation libraries.unitTests
+
+    // Instrumentation test dependencies.
+    androidTestUtil libraries.testUtils
+    androidTestImplementation libraries.instrumentationTests
+}
+
+// When build finished, time to do some QOL/CI/CD related things.
+project.afterEvaluate {
+    /**
+     * Copy new APK file to are few locations.
+     *
+     * First destination - <project root>/APKS/<build number>. I like to keep all APKs in one place, include history ones.
+     * Second destination - <project root>/deployArtifact or deployArtifactDebug. Application can be delivered from there in CD process.
+     */
+    android.applicationVariants.all { variant ->
+        def apksFolder = rootProject.file(String.format("APKS%s%d", File.separator, variant.versionCode))
+        def CDFolder = project.file(String.format("deployArtifact"))
+        if (variant.buildType.name == "debug") {
+            CDFolder = project.file(String.format("deployArtifactDebug"))
+        }
+        def file = new File(apksFolder, String.format("%s_%s_%s.apk", app.internalName, variant.versionName, variant.buildType.name))
+        variant.outputs.all { output ->
+            Task copyApkTask = project.task("copyAndRename${variant.name.capitalize()}APK", type: Copy) {
+                from variant.getPackageApplicationProvider().get().outputs.files[2]
+                into apksFolder
+                include output.outputFileName
+                rename(output.outputFileName, file.getName())
+            }
+            Task copyArtifactTask = project.task("copyAndRename${variant.name.capitalize()}Artifact", type: Copy) {
+                from variant.getPackageApplicationProvider().get().outputs.files[2]
+                into CDFolder
+                include output.outputFileName
+                rename(output.outputFileName, file.getName())
+            }
+            // Run after build complete.
+            variant.getAssembleProvider().configure() {
+                it.finalizedBy {
+                    copyApkTask
+                }
+                it.finalizedBy {
+                    copyArtifactTask
+                }
+            }
+        }
+    }
+}

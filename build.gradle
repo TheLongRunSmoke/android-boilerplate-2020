@@ -1,0 +1,58 @@
+/*
+ * Copyright (C) 2020 Alexander Varakosov aka TheLongRunSmoke
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Top level build file. I like to specified app related variable here, because it more convenient,
+ * than change module build file. It's OK even if you build multiple apps from codebase.
+ */
+ext.app = [
+        internalName     : 'boilerplate',           // Internal application name, used for artifacts naming.
+        id               : 'some.placeholder.pkg',  // Output app package.
+        buildToolsVersion: '30.0.2',                // Generally is unnecessarily to specified buildToolsVersion directly, until it same to compileSdk.
+        compileSdk       : 29,                      // Sync compile-min-target API level between modules.
+        minSdk           : 21,
+        targetSdk        : 29,
+        buildNumber      : 1,                       // Version code. Increase this for new feature.
+        versionName      : '0.1'                    // Major-minor version.
+]
+
+buildscript {
+    apply from: rootProject.file(dependenciesFile)
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath gradlePlugins.android
+        classpath gradlePlugins.kotlin
+        classpath gradlePlugins.navigationSafeArgs
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+subprojects { subProject ->
+    apply from: rootProject.file(dependenciesFile)    // You don't need it in root project.
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
