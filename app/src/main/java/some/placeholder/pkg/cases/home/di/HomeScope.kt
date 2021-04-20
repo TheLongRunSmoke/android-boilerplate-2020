@@ -18,5 +18,8 @@ package some.placeholder.pkg.cases.home.di
 
 import javax.inject.Scope
 
+/**
+ * Define scope, that we use for current fragment.
+ */
 @Scope
 annotation class HomeScope

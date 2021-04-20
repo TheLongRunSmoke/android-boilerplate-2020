@@ -19,6 +19,7 @@ package some.placeholder.pkg.cases.example
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
+// Empty viewmodel.
 class ExampleViewModel @Inject constructor() : ViewModel() {
 
 }

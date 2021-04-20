@@ -22,6 +22,9 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 
+/**
+ * Simple preferences class to start with.
+ */
 class UserPreferences(context: Context) {
 
     private val preferences: SharedPreferences =

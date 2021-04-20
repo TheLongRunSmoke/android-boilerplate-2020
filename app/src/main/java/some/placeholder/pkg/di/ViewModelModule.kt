@@ -42,7 +42,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(ExampleViewModel::class)
-    abstract fun bindHExampleViewModel(viewModel: ExampleViewModel): ViewModel
+    abstract fun bindExampleViewModel(viewModel: ExampleViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

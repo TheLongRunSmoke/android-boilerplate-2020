@@ -50,12 +50,13 @@ class HomeFragment : SelfInjectFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Just creating the view.
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Do
+        // In fragment, do UI initialization here.
     }
 }

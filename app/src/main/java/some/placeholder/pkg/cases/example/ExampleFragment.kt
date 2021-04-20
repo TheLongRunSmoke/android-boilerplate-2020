@@ -24,6 +24,9 @@ import androidx.fragment.app.viewModels
 import pro.tlrs.boilerplate2020.views.SelfInjectFragment
 import some.placeholder.pkg.databinding.FragmentExampleBinding
 
+/**
+ * Another example fragment.
+ */
 class ExampleFragment : SelfInjectFragment() {
 
     private lateinit var binding: FragmentExampleBinding

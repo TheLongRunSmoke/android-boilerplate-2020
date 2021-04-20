@@ -28,13 +28,17 @@ import pro.tlrs.boilerplate2020.views.SelfInjectActivity
 import some.placeholder.pkg.R
 import some.placeholder.pkg.databinding.ActivityMainBinding
 
-
+/**
+ * Main activity of your application.
+ */
 class MainActivity : SelfInjectActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private lateinit var binding: ActivityMainBinding
 
+    // Creating viewmodel instance delegated to viewModels()
+    // viewModelFactory available from parent.
     private val viewModel: MainViewModel by viewModels {
         viewModelFactory
     }

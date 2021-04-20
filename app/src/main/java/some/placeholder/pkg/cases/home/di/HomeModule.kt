@@ -18,6 +18,9 @@ package some.placeholder.pkg.cases.home.di
 
 import dagger.Module
 
+/**
+ * This fragment only module.
+ */
 @Module
 class HomeModule {
 

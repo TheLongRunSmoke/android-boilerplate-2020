@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import some.placeholder.pkg.UserPreferences
 import javax.inject.Inject
 
+// Another example of empty and ready to go viewmodel.
 class HomeViewModel @Inject constructor(
     private val userPreferences: UserPreferences,
 ) : ViewModel() {

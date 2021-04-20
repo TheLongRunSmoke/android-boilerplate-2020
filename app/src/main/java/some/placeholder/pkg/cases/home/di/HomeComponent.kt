@@ -19,6 +19,9 @@ package some.placeholder.pkg.cases.home.di
 import dagger.Component
 import some.placeholder.pkg.di.AppComponent
 
+/**
+ * This fragment component, it's defend on application component and add scope-specified module.
+ */
 @HomeScope
 @Component(dependencies = [AppComponent::class], modules = [HomeModule::class])
 interface HomeComponent {

@@ -17,7 +17,6 @@
 package pro.tlrs.boilerplate2020.views
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
@@ -27,7 +26,7 @@ import pro.tlrs.boilerplate2020.di.ViewModelFactory
 import javax.inject.Inject
 
 /**
- * This activity inject its members in onCreate(Bundle) by herself
+ * This activity inject its members in onCreate(Bundle) by itself
  * and provide ViewModel producer to use viewModels delegate property from ktx.
  *
  * Based on {@link dagger.android.DaggerActivity}.

@@ -26,9 +26,13 @@ import javax.inject.Inject
  * Example view model.
  */
 class MainViewModel @Inject constructor(
-    val preferences: UserPreferences
+    val preferences: UserPreferences  // Use injector constructor for viewmodels.
 ) : ViewModel() {
 
+    /**
+     * Back field for state.
+     * Use _state.value or _state.pastValue() to set state, sync or async respectively.
+     */
     private val _state = SingleLiveEvent<MainActivityState>()
 
     /**

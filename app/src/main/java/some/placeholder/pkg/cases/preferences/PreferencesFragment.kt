@@ -25,18 +25,28 @@ import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.snackbar.Snackbar
 import some.placeholder.pkg.R
 
+/**
+ * Example preferences fragment.
+ */
 class PreferencesFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        // Inflate screen from XML.
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        // Let this fragment to place option menu to app bar.
         setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        // Create option menu.
         inflater.inflate(R.menu.preferences_options, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    /**
+     * Handle option menu taps.
+     * In this case, we need to handle home button too.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             // Process back navigation from a toolbar.

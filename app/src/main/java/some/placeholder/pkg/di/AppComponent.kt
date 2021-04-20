@@ -27,14 +27,23 @@ import some.placeholder.pkg.cases.main.MainActivity
 import javax.inject.Provider
 import javax.inject.Singleton
 
+/**
+ * Application module.
+ * Handle android specified injection and viewmodel injection.
+ */
 @Component(modules = [AndroidInjectionModule::class, ViewModelModule::class, AppModule::class, UiModule::class])
 @Singleton
 interface AppComponent : AndroidInjector<Application> {
 
+    /**
+     * Container for viewmodel providers, that will be used by dagger multibinding.
+     */
     fun getViewModels(): Map<Class<out ViewModel>, Provider<ViewModel>>
 
+    // Let application module handle main activity injection, to make it simple.
     fun inject(mainActivity: MainActivity)
 
+    // Component builder, see Dagger docs for details.
     @Component.Builder
     interface Builder {
         @BindsInstance
