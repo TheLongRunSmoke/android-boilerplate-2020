@@ -16,9 +16,7 @@
 
 package some.placeholder.pkg.cases.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import pro.tlrs.boilerplate2020.lives.SingleLiveEvent
+import pro.tlrs.boilerplate2020.lifecycle.ViewModel
 import some.placeholder.pkg.UserPreferences
 import javax.inject.Inject
 
@@ -27,18 +25,8 @@ import javax.inject.Inject
  */
 class MainViewModel @Inject constructor(
     val preferences: UserPreferences  // Use injector constructor for viewmodels.
-) : ViewModel() {
+) : ViewModel<MainActivityState>() {
 
-    /**
-     * Back field for state.
-     * Use _state.value or _state.pastValue() to set state, sync or async respectively.
-     */
-    private val _state = SingleLiveEvent<MainActivityState>()
-
-    /**
-     * LiveData for states, observe it in view.
-     */
-    internal val state: LiveData<MainActivityState>
-        get() = _state
+    // Use _state.value or _state.pastValue() to set state, sync or async respectively.
 
 }
